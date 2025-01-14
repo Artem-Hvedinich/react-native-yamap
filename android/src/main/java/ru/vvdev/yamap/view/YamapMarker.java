@@ -125,7 +125,7 @@ public class YamapMarker extends ReactViewGroup implements MapObjectTapListener,
                 }
             }
             if (childs.size() == 0) {
-                if (!iconSource.equals("")) {
+                if (iconSource != null && !iconSource.equals("")) {
                     YamapView parent = (YamapView)getParent();
                     if (parent!=null) {
                         parent.setImage(iconSource, mapObject, iconStyle);
