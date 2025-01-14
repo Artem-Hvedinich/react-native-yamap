@@ -161,7 +161,6 @@ var ClusteredYamap = /** @class */ (function (_super) {
         utils_1.processColorProps(props, 'clusterColor');
         utils_1.processColorProps(props, 'userLocationAccuracyFillColor');
         utils_1.processColorProps(props, 'userLocationAccuracyStrokeColor');
-        utils_1.processColorProps(props, 'followUser');
         return props;
     };
     ClusteredYamap.prototype.render = function () {

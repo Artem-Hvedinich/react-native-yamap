@@ -1,8 +1,9 @@
 import React from 'react';
 import { ViewProps, ImageSourcePropType, NativeSyntheticEvent, ListRenderItemInfo } from 'react-native';
-import { MapType, Animation, Point, DrivingInfo, MasstransitInfo, RoutesFoundEvent, Vehicles, CameraPosition, VisibleRegion, ScreenPoint, MapLoaded, InitialRegion } from '../interfaces';
+import { MapType, Animation, Point, DrivingInfo, MasstransitInfo, RoutesFoundEvent, Vehicles, CameraPosition, VisibleRegion, ScreenPoint, MapLoaded, InitialRegion, YandexLogoPosition, YandexLogoPadding } from '../interfaces';
 export interface ClusteredYaMapProps<T = any> extends ViewProps {
     userLocationIcon?: ImageSourcePropType;
+    userLocationIconScale?: number;
     clusteredMarkers: ReadonlyArray<{
         point: Point;
         data: T;
@@ -32,6 +33,8 @@ export interface ClusteredYaMapProps<T = any> extends ViewProps {
     initialRegion?: InitialRegion;
     maxFps?: number;
     followUser?: boolean;
+    logoPosition?: YandexLogoPosition;
+    logoPadding?: YandexLogoPadding;
 }
 export declare class ClusteredYamap extends React.Component<ClusteredYaMapProps> {
     static defaultProps: {
