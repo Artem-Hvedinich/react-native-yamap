@@ -80,8 +80,8 @@ public class YamapMarker extends ReactViewGroup implements MapObjectTapListener,
         updateMarker();
     }
 
-    public void setRotated(Boolean rotated) {
-        rotated = rotated;
+    public void setRotated(Boolean _rotated) {
+        rotated = _rotated;
         updateMarker();
     }
 
@@ -125,7 +125,7 @@ public class YamapMarker extends ReactViewGroup implements MapObjectTapListener,
                 }
             }
             if (childs.size() == 0) {
-                if (iconSource != null && !iconSource.equals("")) {
+                if (!iconSource.equals("")) {
                     YamapView parent = (YamapView)getParent();
                     if (parent!=null) {
                         parent.setImage(iconSource, mapObject, iconStyle);

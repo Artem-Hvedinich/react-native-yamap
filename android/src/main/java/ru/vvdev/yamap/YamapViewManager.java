@@ -227,6 +227,11 @@ public class YamapViewManager extends ViewGroupManager<YamapView> {
         }
     }
 
+    @ReactProp(name = "userLocationIconScale")
+    public void setUserLocationIconScale(View view, float scale) {
+        castToYaMapView(view).setUserLocationIconScale(scale);
+    }
+
     @ReactProp(name = "userLocationAccuracyFillColor")
     public void setUserLocationAccuracyFillColor(View view, int color) {
         castToYaMapView(view).setUserLocationAccuracyFillColor(color);
@@ -306,6 +311,20 @@ public class YamapViewManager extends ViewGroupManager<YamapView> {
     @ReactProp(name = "interactive")
     public void setInteractive(View view, boolean interactive) {
         castToYaMapView(view).setInteractive(interactive);
+    }
+
+    @ReactProp(name = "logoPosition")
+    public void setLogoPosition(View view, ReadableMap params) {
+        if (params != null) {
+            castToYaMapView(view).setLogoPosition(params);
+        }
+    }
+
+    @ReactProp(name = "logoPadding")
+    public void setLogoPadding(View view, ReadableMap params) {
+        if (params != null) {
+            castToYaMapView(view).setLogoPadding(params);
+        }
     }
 
     @Override

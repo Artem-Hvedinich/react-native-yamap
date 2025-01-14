@@ -1,4 +1,4 @@
-import { Point } from './interfaces';
+import { BoundingBox, Point } from './interfaces';
 export declare type YamapSuggest = {
     title: string;
     subtitle?: string;
@@ -24,8 +24,9 @@ export declare enum SuggestTypes {
      */
     YMKSuggestTypeTransit = 4
 }
-declare type SuggestOptions = {
+export declare type SuggestOptions = {
     userPosition?: Point;
+    boundingBox?: BoundingBox;
     suggestWords?: boolean;
     suggestTypes?: SuggestTypes[];
 };

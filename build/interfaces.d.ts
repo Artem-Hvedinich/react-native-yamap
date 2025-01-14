@@ -2,6 +2,10 @@ export interface Point {
     lat: number;
     lon: number;
 }
+export interface BoundingBox {
+    southWest: Point;
+    northEast: Point;
+}
 export interface ScreenPoint {
     x: number;
     y: number;
@@ -62,6 +66,7 @@ export interface CameraPosition {
     tilt: number;
     azimuth: number;
     point: Point;
+    reason: 'GESTURES' | 'APPLICATION';
     finished: boolean;
 }
 export declare type VisibleRegion = {
@@ -74,3 +79,11 @@ export declare enum Animation {
     SMOOTH = 0,
     LINEAR = 1
 }
+export declare type YandexLogoPosition = {
+    horizontal?: 'left' | 'center' | 'right';
+    vertical?: 'top' | 'bottom';
+};
+export declare type YandexLogoPadding = {
+    horizontal?: number;
+    vertical?: number;
+};
