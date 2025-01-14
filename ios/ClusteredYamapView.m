@@ -21,8 +21,7 @@ RCT_EXPORT_MODULE()
         @"onVisibleRegionReceived",
         @"onCameraPositionChange",
         @"onMapPress",
-        @"onMapLongPress",
-        @"onCameraPositionChangeEnd"
+        @"onMapLongPress"
     ];
 }
 
@@ -52,13 +51,7 @@ RCT_EXPORT_VIEW_PROPERTY(onVisibleRegionReceived, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onCameraPositionChange, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onMapPress, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onMapLongPress, RCTBubblingEventBlock)
-RCT_EXPORT_VIEW_PROPERTY(onCameraPositionChangeEnd, RCTBubblingEventBlock)
 
-RCT_CUSTOM_VIEW_PROPERTY(initialRegion, NSDictionary, RNYMView) {
-    if (json && view) {
-        [view setInitialRegion:json];
-    }
-}
 RCT_CUSTOM_VIEW_PROPERTY(userLocationAccuracyFillColor, NSNumber, RNCYMView) {
     [view setUserLocationAccuracyFillColor:[RCTConvert UIColor:json]];
 }
@@ -159,20 +152,6 @@ RCT_EXPORT_METHOD(fitAllMarkers:(nonnull NSNumber*) reactTag) {
             return;
         }
         [view fitAllMarkers];
-    }];
-}
-
-RCT_EXPORT_METHOD(fitMarkers:(nonnull NSNumber *)reactTag json:(id)json) {
-    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView*> *viewRegistry) {
-        RNYMView *view = (RNYMView *)viewRegistry[reactTag];
-
-        if (!view || ![view isKindOfClass:[RNYMView class]]) {
-            RCTLogError(@"Cannot find NativeView with tag #%@", reactTag);
-            return;
-        }
-
-        NSArray<YMKPoint *> *points = [RCTConvert Points:json];
-        [view fitMarkers: points];
     }];
 }
 

@@ -98,8 +98,8 @@ export class Geocoder {
     return undefined;
   }
 
-  static async geoToAddress(geo: Point, lang?: Lang, kind?: ObjectKind): Promise<Address | undefined> {
-    const { response } = await Geocoder.geocode(geo, kind, 1, 0, lang);
+  static async geoToAddress(geo: Point): Promise<Address | undefined> {
+    const { response } = await Geocoder.geocode(geo);
 
     if (
       response.GeoObjectCollection

@@ -3,11 +3,6 @@ export interface Point {
   lon: number;
 }
 
-export interface BoundingBox {
-  southWest: Point;
-  northEast: Point;
-}
-
 export interface ScreenPoint {
   x: number;
   y: number;
@@ -78,7 +73,6 @@ export interface CameraPosition {
   tilt: number;
   azimuth: number;
   point: Point;
-  reason: 'GESTURES' | 'APPLICATION';
   finished: boolean;
 }
 

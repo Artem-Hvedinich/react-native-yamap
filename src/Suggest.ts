@@ -1,4 +1,4 @@
-import { BoundingBox, Point } from './interfaces';
+import { Point } from './interfaces';
 import { NativeModules } from 'react-native';
 
 const { YamapSuggests } = NativeModules;
@@ -30,12 +30,7 @@ export enum SuggestTypes {
   YMKSuggestTypeTransit = 0b01 << 2,
 }
 
-export type SuggestOptions = {
-  userPosition?: Point;
-  boundingBox?: BoundingBox;
-  suggestWords?: boolean;
-  suggestTypes?: SuggestTypes[];
-};
+type SuggestOptions = { userPosition?: Point, suggestWords?: boolean, suggestTypes?: SuggestTypes[] }
 
 type SuggestFetcher = (query: string, options?: SuggestOptions) => Promise<Array<YamapSuggest>>;
 const suggest: SuggestFetcher = (query, options) => {
