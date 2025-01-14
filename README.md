@@ -217,16 +217,6 @@ type YamapSuggestWithCoords = {
   subtitle?: string;
   uri?: string;
 }
-
-type YandexLogoPosition = {
-  horizontal: 'left' | 'center' | 'right';
-  vertical: 'top' | 'bottom';
-}
-
-type YandexLogoPadding = {
-  horizontal?: number;
-  vertical?: number;
-}
 ```
 
 #### Доступные `props` для компонента **MapView**:
@@ -236,7 +226,6 @@ type YandexLogoPadding = {
 | showUserPosition | boolean | true | Отслеживание геоданных и отображение позиции пользователя |
 | followUser | boolean | true | слежение камеры за пользователем |
 | userLocationIcon | ImageSource | false | Иконка для позиции пользователя. Доступны те же значения что и у компонента Image из React Native |
-| userLocationIconScale | number | 1 | Масштабирование иконки пользователя |
 | initialRegion | InitialRegion | | Изначальное местоположение карты при загрузке |
 | interactive | boolean | true | Интерактивная ли карта (перемещение по карте, отслеживание нажатий) |
 | nightMode | boolean | false | Использование ночного режима |
@@ -253,10 +242,9 @@ type YandexLogoPadding = {
 | tiltGesturesEnabled | boolean | true | Включены ли жесты наклона камеры двумя пальцами |
 | rotateGesturesEnabled | boolean | true | Включены ли жесты поворота камеры |
 | fastTapEnabled | boolean | true | Убрана ли задержка в 300мс при клике/тапе |
+| withClusters | boolean | false | Автоматическая группировка меток на карте в кластеры |
 | clusterColor | string | 'red' | Цвет фона метки-кластера |
 | maxFps | number | 60 | Максимальная частота обновления карты |
-| logoPosition | YandexLogoPosition | {} | Позиция логотипа Яндекса на карте |
-| logoPadding | YandexLogoPadding | {} | Отступ логотипа Яндекса на карте |
 | mapType | string | 'vector' | Тип карты |
 | mapStyle | string | {} | Стили карты согласно [документации](https://yandex.ru/dev/maps/mapkit/doc/dg/concepts/style.html) |
 
@@ -523,7 +511,7 @@ import { ClusteredYamap } from '../../react-native-yamap/src';
 const Map = () => {
   return (
     <ClusteredYamap
-      clusterColor="red"
+      clusterColor={'red'}
       clusteredMarkers={[
         {
           point: {

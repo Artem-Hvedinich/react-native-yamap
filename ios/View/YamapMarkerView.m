@@ -201,57 +201,41 @@
 }
 
 - (void)moveAnimationLoop:(NSInteger)frame withTotalFrames:(NSInteger)totalFrames withDeltaLat:(double)deltaLat withDeltaLon:(double)deltaLon {
-    @try  {
-        YMKPlacemarkMapObject *placemark = [self getMapObject];
-        YMKPoint* p = placemark.geometry;
-        placemark.geometry = [YMKPoint pointWithLatitude:p.latitude + deltaLat/totalFrames
-                                            longitude:p.longitude + deltaLon/totalFrames];
+    YMKPlacemarkMapObject *placemark = [self getMapObject];
+    YMKPoint* p = placemark.geometry;
+    placemark.geometry = [YMKPoint pointWithLatitude:p.latitude + deltaLat/totalFrames
+                                           longitude:p.longitude + deltaLon/totalFrames];
 
-        if (frame < totalFrames) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC / YAMAP_FRAMES_PER_SECOND), dispatch_get_main_queue(), ^{
-                [self moveAnimationLoop: frame+1 withTotalFrames:totalFrames withDeltaLat:deltaLat withDeltaLon:deltaLon];
-            });
-        }
-    } @catch (NSException *exception) {
-        NSLog(@"Reason: %@ ",exception.reason);
+    if (frame < totalFrames) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC / YAMAP_FRAMES_PER_SECOND), dispatch_get_main_queue(), ^{
+            [self moveAnimationLoop: frame+1 withTotalFrames:totalFrames withDeltaLat:deltaLat withDeltaLon:deltaLon];
+        });
     }
 }
 
 - (void)rotateAnimationLoop:(NSInteger)frame withTotalFrames:(NSInteger)totalFrames withDelta:(double)delta {
-    @try  {
-        YMKPlacemarkMapObject *placemark = [self getMapObject];
-        [placemark setDirection:placemark.direction+(delta / totalFrames)];
+    YMKPlacemarkMapObject *placemark = [self getMapObject];
+    [placemark setDirection:placemark.direction+(delta / totalFrames)];
 
-        if (frame < totalFrames) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC / YAMAP_FRAMES_PER_SECOND), dispatch_get_main_queue(), ^{
-                [self rotateAnimationLoop: frame+1 withTotalFrames:totalFrames withDelta:delta];
-            });
-        }
-    } @catch (NSException *exception) {
-        NSLog(@"Reason: %@ ",exception.reason);
+    if (frame < totalFrames) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC / YAMAP_FRAMES_PER_SECOND), dispatch_get_main_queue(), ^{
+            [self rotateAnimationLoop: frame+1 withTotalFrames:totalFrames withDelta:delta];
+        });
     }
 }
 
 - (void)animatedMoveTo:(YMKPoint*)point withDuration:(float)duration {
-    @try  {
-        YMKPlacemarkMapObject* placemark = [self getMapObject];
-        YMKPoint* p = placemark.geometry;
-        double deltaLat = point.latitude - p.latitude;
-        double deltaLon = point.longitude - p.longitude;
-        [self moveAnimationLoop: 0 withTotalFrames:[@(duration / YAMAP_FRAMES_PER_SECOND) integerValue] withDeltaLat:deltaLat withDeltaLon:deltaLon];
-    } @catch (NSException *exception) {
-        NSLog(@"Reason: %@ ",exception.reason);
-    }
+    YMKPlacemarkMapObject* placemark = [self getMapObject];
+    YMKPoint* p = placemark.geometry;
+    double deltaLat = point.latitude - p.latitude;
+    double deltaLon = point.longitude - p.longitude;
+    [self moveAnimationLoop: 0 withTotalFrames:[@(duration / YAMAP_FRAMES_PER_SECOND) integerValue] withDeltaLat:deltaLat withDeltaLon:deltaLon];
 }
 
 - (void)animatedRotateTo:(float)angle withDuration:(float)duration {
-    @try  {
-        YMKPlacemarkMapObject* placemark = [self getMapObject];
-        double delta = angle - placemark.direction;
-        [self rotateAnimationLoop: 0 withTotalFrames:[@(duration / YAMAP_FRAMES_PER_SECOND) integerValue] withDelta:delta];
-    } @catch (NSException *exception) {
-        NSLog(@"Reason: %@ ",exception.reason);
-    }
+    YMKPlacemarkMapObject* placemark = [self getMapObject];
+    double delta = angle - placemark.direction;
+    [self rotateAnimationLoop: 0 withTotalFrames:[@(duration / YAMAP_FRAMES_PER_SECOND) integerValue] withDelta:delta];
 }
 
 @synthesize reactTag;

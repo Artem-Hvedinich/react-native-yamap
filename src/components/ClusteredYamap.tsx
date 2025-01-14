@@ -6,28 +6,14 @@ import {
   UIManager,
   findNodeHandle,
   ViewProps,
-  ImageSourcePropType,
-  NativeSyntheticEvent,
-  ListRenderItemInfo
+  ImageSourcePropType, NativeSyntheticEvent, ListRenderItemInfo,
 } from 'react-native';
 // @ts-ignore
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 import CallbacksManager from '../utils/CallbacksManager';
 import {
-  MapType,
-  Animation,
-  Point,
-  DrivingInfo,
-  MasstransitInfo,
-  RoutesFoundEvent,
-  Vehicles,
-  CameraPosition,
-  VisibleRegion,
-  ScreenPoint,
-  MapLoaded,
-  InitialRegion,
-  YandexLogoPosition,
-  YandexLogoPadding
+  MapType, Animation, Point, DrivingInfo, MasstransitInfo, RoutesFoundEvent, Vehicles, CameraPosition, VisibleRegion,
+  ScreenPoint, MapLoaded, InitialRegion,
 } from '../interfaces';
 import { processColorProps } from '../utils';
 import { YaMap } from './Yamap';
@@ -36,7 +22,6 @@ const { yamap: NativeYamapModule } = NativeModules;
 
 export interface ClusteredYaMapProps<T = any> extends ViewProps {
   userLocationIcon?: ImageSourcePropType;
-  userLocationIconScale?: number;
   clusteredMarkers: ReadonlyArray<{point: Point, data: T}>
   renderMarker: (info: {point: Point, data: ListRenderItemInfo<T>}, index: number) => React.ReactElement
   clusterColor?: string;
@@ -60,8 +45,6 @@ export interface ClusteredYaMapProps<T = any> extends ViewProps {
   initialRegion?: InitialRegion;
   maxFps?: number;
   followUser?: boolean;
-  logoPosition?: YandexLogoPosition;
-  logoPadding?: YandexLogoPadding;
 }
 
 const YaMapNativeComponent = requireNativeComponent<Omit<ClusteredYaMapProps, 'clusteredMarkers'> & {clusteredMarkers: Point[]}>('ClusteredYamapView');
@@ -261,7 +244,7 @@ export class ClusteredYamap extends React.Component<ClusteredYaMapProps> {
     processColorProps(props, 'clusterColor' as keyof ClusteredYaMapProps);
     processColorProps(props, 'userLocationAccuracyFillColor' as keyof ClusteredYaMapProps);
     processColorProps(props, 'userLocationAccuracyStrokeColor' as keyof ClusteredYaMapProps);
-
+    processColorProps(props, 'followUser' as keyof ClusteredYaMapProps);
     return props;
   }
 
