@@ -131,12 +131,12 @@ var Geocoder = /** @class */ (function () {
             });
         });
     };
-    Geocoder.geoToAddress = function (geo, lang, kind) {
+    Geocoder.geoToAddress = function (geo) {
         return __awaiter(this, void 0, void 0, function () {
             var response, obj;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, Geocoder.geocode(geo, kind, 1, 0, lang)];
+                    case 0: return [4 /*yield*/, Geocoder.geocode(geo)];
                     case 1:
                         response = (_a.sent()).response;
                         if (response.GeoObjectCollection

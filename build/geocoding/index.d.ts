@@ -19,5 +19,5 @@ export declare class Geocoder {
     static geocode(geocode: Point, kind?: ObjectKind, results?: number, skip?: number, lang?: Lang): Promise<YandexGeoResponse>;
     static reverseGeocode(geocode: string, kind?: ObjectKind, results?: number, skip?: number, lang?: Lang, rspn?: 0 | 1, ll?: Point, spn?: [number, number], bbox?: [Point, Point]): Promise<YandexGeoResponse>;
     static addressToGeo(address: string): Promise<Point | undefined>;
-    static geoToAddress(geo: Point, lang?: Lang, kind?: ObjectKind): Promise<Address | undefined>;
+    static geoToAddress(geo: Point): Promise<Address | undefined>;
 }

@@ -54,16 +54,16 @@
           [iconStyle setAnchor:anchor];
         }
         [iconStyle setRotationType:rotated];
-		if ([_reactSubviews count] == 0) {
-			if (![source isEqual:@""]) {
-				if (![source isEqual:lastSource]) {
-					[mapObject setIconWithImage:[self resolveUIImage:source]];
-					lastSource = source;
-				}
-			}
-		}
+        if ([_reactSubviews count] == 0) {
+            if (![source isEqual:@""]) {
+                if (![source isEqual:lastSource]) {
+                    [mapObject setIconWithImage:[self resolveUIImage:source]];
+                    lastSource = source;
+                }
+            }
+        }
         [mapObject setIconStyleWithStyle:iconStyle];
-	}
+    }
 }
 
 
@@ -75,13 +75,16 @@
         [iconStyle setScale:scale];
         [iconStyle setVisible:visible];
         if (anchor) {
-          [iconStyle setAnchor:anchor];
+            [iconStyle setAnchor:anchor];
         }
         [iconStyle setRotationType:rotated];
         if ([_reactSubviews count] == 0) {
-            if (![source isEqual:@""]) {
-                    [mapObject setIconWithImage:[self resolveUIImage:source]];
+            if (![source isEqualToString:@""] && source != nil) {
+                UIImage *image = [self resolveUIImage:source];
+                if (image) {
+                    [mapObject setIconWithImage:image];
                     lastSource = source;
+                }
             }
         }
         [mapObject setIconStyleWithStyle:iconStyle];
@@ -112,18 +115,30 @@
     [self updateMarker];
 }
 
-- (UIImage*)resolveUIImage:(NSString*)uri {
-    UIImage *icon;
+- (UIImage *)resolveUIImage:(NSString *)uri {
+    UIImage *icon = nil;
+    
+    if (!uri || [uri isEqualToString:@""]) {
+        NSLog(@"URI is nil or empty");
+        return nil;
+    }
 
-    if ([uri rangeOfString:@"http://"].location == NSNotFound && [uri rangeOfString:@"https://"].location == NSNotFound) {
-        if ([uri rangeOfString:@"file://"].location != NSNotFound){
-            NSString* file = [uri substringFromIndex:8];
-            icon = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL fileURLWithPath:file]]];
-        } else {
-            icon = [UIImage imageNamed:uri];
-        }
-    } else {
-        icon = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:uri]]];
+    NSURL *url = [NSURL URLWithString:uri];
+    if (!url) {
+        NSLog(@"Failed to create URL from URI: %@", uri);
+        return nil;
+    }
+
+    NSData *imageData = [NSData dataWithContentsOfURL:url];
+    if (!imageData) {
+        NSLog(@"Failed to load image data from URL: %@", uri);
+        return nil;
+    }
+
+    icon = [UIImage imageWithData:imageData];
+    if (!icon) {
+        NSLog(@"Failed to create image from loaded data: %@", uri);
+        return nil;
     }
 
     return icon;
@@ -201,41 +216,57 @@
 }
 
 - (void)moveAnimationLoop:(NSInteger)frame withTotalFrames:(NSInteger)totalFrames withDeltaLat:(double)deltaLat withDeltaLon:(double)deltaLon {
-    YMKPlacemarkMapObject *placemark = [self getMapObject];
-    YMKPoint* p = placemark.geometry;
-    placemark.geometry = [YMKPoint pointWithLatitude:p.latitude + deltaLat/totalFrames
-                                           longitude:p.longitude + deltaLon/totalFrames];
+    @try  {
+        YMKPlacemarkMapObject *placemark = [self getMapObject];
+        YMKPoint* p = placemark.geometry;
+        placemark.geometry = [YMKPoint pointWithLatitude:p.latitude + deltaLat/totalFrames
+                                            longitude:p.longitude + deltaLon/totalFrames];
 
-    if (frame < totalFrames) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC / YAMAP_FRAMES_PER_SECOND), dispatch_get_main_queue(), ^{
-            [self moveAnimationLoop: frame+1 withTotalFrames:totalFrames withDeltaLat:deltaLat withDeltaLon:deltaLon];
-        });
+        if (frame < totalFrames) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC / YAMAP_FRAMES_PER_SECOND), dispatch_get_main_queue(), ^{
+                [self moveAnimationLoop: frame+1 withTotalFrames:totalFrames withDeltaLat:deltaLat withDeltaLon:deltaLon];
+            });
+        }
+    } @catch (NSException *exception) {
+        NSLog(@"Reason: %@ ",exception.reason);
     }
 }
 
 - (void)rotateAnimationLoop:(NSInteger)frame withTotalFrames:(NSInteger)totalFrames withDelta:(double)delta {
-    YMKPlacemarkMapObject *placemark = [self getMapObject];
-    [placemark setDirection:placemark.direction+(delta / totalFrames)];
+    @try  {
+        YMKPlacemarkMapObject *placemark = [self getMapObject];
+        [placemark setDirection:placemark.direction+(delta / totalFrames)];
 
-    if (frame < totalFrames) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC / YAMAP_FRAMES_PER_SECOND), dispatch_get_main_queue(), ^{
-            [self rotateAnimationLoop: frame+1 withTotalFrames:totalFrames withDelta:delta];
-        });
+        if (frame < totalFrames) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC / YAMAP_FRAMES_PER_SECOND), dispatch_get_main_queue(), ^{
+                [self rotateAnimationLoop: frame+1 withTotalFrames:totalFrames withDelta:delta];
+            });
+        }
+    } @catch (NSException *exception) {
+        NSLog(@"Reason: %@ ",exception.reason);
     }
 }
 
 - (void)animatedMoveTo:(YMKPoint*)point withDuration:(float)duration {
-    YMKPlacemarkMapObject* placemark = [self getMapObject];
-    YMKPoint* p = placemark.geometry;
-    double deltaLat = point.latitude - p.latitude;
-    double deltaLon = point.longitude - p.longitude;
-    [self moveAnimationLoop: 0 withTotalFrames:[@(duration / YAMAP_FRAMES_PER_SECOND) integerValue] withDeltaLat:deltaLat withDeltaLon:deltaLon];
+    @try  {
+        YMKPlacemarkMapObject* placemark = [self getMapObject];
+        YMKPoint* p = placemark.geometry;
+        double deltaLat = point.latitude - p.latitude;
+        double deltaLon = point.longitude - p.longitude;
+        [self moveAnimationLoop: 0 withTotalFrames:[@(duration / YAMAP_FRAMES_PER_SECOND) integerValue] withDeltaLat:deltaLat withDeltaLon:deltaLon];
+    } @catch (NSException *exception) {
+        NSLog(@"Reason: %@ ",exception.reason);
+    }
 }
 
 - (void)animatedRotateTo:(float)angle withDuration:(float)duration {
-    YMKPlacemarkMapObject* placemark = [self getMapObject];
-    double delta = angle - placemark.direction;
-    [self rotateAnimationLoop: 0 withTotalFrames:[@(duration / YAMAP_FRAMES_PER_SECOND) integerValue] withDelta:delta];
+    @try  {
+        YMKPlacemarkMapObject* placemark = [self getMapObject];
+        double delta = angle - placemark.direction;
+        [self rotateAnimationLoop: 0 withTotalFrames:[@(duration / YAMAP_FRAMES_PER_SECOND) integerValue] withDelta:delta];
+    } @catch (NSException *exception) {
+        NSLog(@"Reason: %@ ",exception.reason);
+    }
 }
 
 @synthesize reactTag;

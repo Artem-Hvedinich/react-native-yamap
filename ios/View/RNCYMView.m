@@ -2,6 +2,7 @@
 #import <React/UIView+React.h>
 
 #import <MapKit/MapKit.h>
+#import "../Converter/RCTConvert+Yamap.m"
 @import YandexMapsMobile;
 
 #ifndef MAX
@@ -44,6 +45,7 @@
 
 - (instancetype)init {
     self = [super init];
+    _reactSubviews = [[NSMutableArray alloc] init];
     placemarks = [[NSMutableArray alloc] init];
     clusterColor=nil;
     userClusters=NO;
@@ -160,11 +162,11 @@
     float externalRadius = internalRadius + STROKE_SIZE;
     UIImage *someImageView = [UIImage alloc];
     // This function returns a newImage, based on image, that has been:
-       // - scaled to fit in (CGRect) rect
-       // - and cropped within a circle of radius: rectWidth/2
+    // - scaled to fit in (CGRect) rect
+    // - and cropped within a circle of radius: rectWidth/2
 
-       //Create the bitmap graphics context
-       UIGraphicsBeginImageContextWithOptions(CGSizeMake(externalRadius*2, externalRadius*2), NO, 1.0);
+    //Create the bitmap graphics context
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(externalRadius*2, externalRadius*2), NO, 1.0);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetFillColorWithColor(context, [clusterColor CGColor]);
     CGContextFillEllipseInRect(context, CGRectMake(0, 0, externalRadius*2, externalRadius*2));
@@ -190,6 +192,24 @@
     }
     [self fitMarkers:lastKnownMarkers];
     return YES;
+}
+
+- (void)setInitialRegion:(NSDictionary *)initialParams {
+    if ([initialParams valueForKey:@"lat"] == nil || [initialParams valueForKey:@"lon"] == nil) return;
+
+    float initialZoom = 10.f;
+    float initialAzimuth = 0.f;
+    float initialTilt = 0.f;
+
+    if ([initialParams valueForKey:@"zoom"] != nil) initialZoom = [initialParams[@"zoom"] floatValue];
+
+    if ([initialParams valueForKey:@"azimuth"] != nil) initialTilt = [initialParams[@"azimuth"] floatValue];
+
+    if ([initialParams valueForKey:@"tilt"] != nil) initialTilt = [initialParams[@"tilt"] floatValue];
+
+    YMKPoint *initialRegionCenter = [RCTConvert YMKPoint:@{@"lat" : [initialParams valueForKey:@"lat"], @"lon" : [initialParams valueForKey:@"lon"]}];
+    YMKCameraPosition *initialRegioPosition = [YMKCameraPosition cameraPositionWithTarget:initialRegionCenter zoom:initialZoom azimuth:initialAzimuth tilt:initialTilt];
+    [self.mapWindow.map moveWithCameraPosition:initialRegioPosition];
 }
 
 
