@@ -12,7 +12,8 @@ export interface PolylineProps {
     onPress?: () => void;
     points: Point[];
     children?: undefined;
+    handled?: boolean;
 }
 export declare class Polyline extends React.Component<PolylineProps> {
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }

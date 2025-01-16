@@ -1,7 +1,7 @@
 import { Point } from '../interfaces';
-export declare type ObjectKind = 'house' | 'street' | 'metro' | 'district' | 'locality';
-export declare type Lang = 'ru_RU' | 'uk_UA' | 'be_BY' | 'en_RU' | 'en_US' | 'tr_TR';
-export declare type YandexGeoResponse = any;
+export type ObjectKind = 'house' | 'street' | 'metro' | 'district' | 'locality';
+export type Lang = 'ru_RU' | 'uk_UA' | 'be_BY' | 'en_RU' | 'en_US' | 'tr_TR';
+export type YandexGeoResponse = any;
 export interface Address {
     country_code: string;
     formatted: string;
@@ -19,5 +19,5 @@ export declare class Geocoder {
     static geocode(geocode: Point, kind?: ObjectKind, results?: number, skip?: number, lang?: Lang): Promise<YandexGeoResponse>;
     static reverseGeocode(geocode: string, kind?: ObjectKind, results?: number, skip?: number, lang?: Lang, rspn?: 0 | 1, ll?: Point, spn?: [number, number], bbox?: [Point, Point]): Promise<YandexGeoResponse>;
     static addressToGeo(address: string): Promise<Point | undefined>;
-    static geoToAddress(geo: Point): Promise<Address | undefined>;
+    static geoToAddress(geo: Point, lang?: Lang, kind?: ObjectKind): Promise<Address | undefined>;
 }

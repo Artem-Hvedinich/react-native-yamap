@@ -1,6 +1,6 @@
 import React from 'react';
 import { ViewProps, ImageSourcePropType, NativeSyntheticEvent, ListRenderItemInfo } from 'react-native';
-import { MapType, Animation, Point, DrivingInfo, MasstransitInfo, RoutesFoundEvent, Vehicles, CameraPosition, VisibleRegion, ScreenPoint, MapLoaded, InitialRegion, YandexLogoPosition, YandexLogoPadding } from '../interfaces';
+import { Animation, Point, DrivingInfo, MasstransitInfo, RoutesFoundEvent, Vehicles, CameraPosition, VisibleRegion, ScreenPoint, MapLoaded, InitialRegion, YandexLogoPosition, YandexLogoPadding } from '../interfaces';
 export interface ClusteredYaMapProps<T = any> extends ViewProps {
     userLocationIcon?: ImageSourcePropType;
     userLocationIconScale?: number;
@@ -16,7 +16,6 @@ export interface ClusteredYaMapProps<T = any> extends ViewProps {
     showUserPosition?: boolean;
     nightMode?: boolean;
     mapStyle?: string;
-    mapType?: MapType;
     onCameraPositionChange?: (event: NativeSyntheticEvent<CameraPosition>) => void;
     onCameraPositionChangeEnd?: (event: NativeSyntheticEvent<CameraPosition>) => void;
     onMapPress?: (event: NativeSyntheticEvent<Point>) => void;
@@ -42,7 +41,7 @@ export declare class ClusteredYamap extends React.Component<ClusteredYaMapProps>
         clusterColor: string;
         maxFps: number;
     };
-    map: React.RefObject<any>;
+    map: React.RefObject<YaMapNativeComponent>;
     static ALL_MASSTRANSIT_VEHICLES: Vehicles[];
     static init(apiKey: string): Promise<void>;
     static setLocale(locale: string): Promise<void>;
@@ -74,5 +73,5 @@ export declare class ClusteredYamap extends React.Component<ClusteredYaMapProps>
     private processScreenToWorldPointsReceived;
     private resolveImageUri;
     private getProps;
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }

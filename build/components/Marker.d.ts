@@ -14,6 +14,7 @@ export interface MarkerProps {
         y: number;
     };
     visible?: boolean;
+    handled?: boolean;
 }
 interface State {
     recreateKey: boolean;
@@ -25,7 +26,7 @@ export declare class Marker extends React.Component<MarkerProps, State> {
     };
     state: {
         recreateKey: boolean;
-        children: React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)> | (React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)> & string) | (React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)> & number) | (React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)> & false) | (React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)> & true) | (React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)> & React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)>) | (React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)> & React.ReactNodeArray) | (React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)> & React.ReactPortal) | undefined;
+        children: React.ReactElement<any, string | React.JSXElementConstructor<any>> | undefined;
     };
     private getCommand;
     static getDerivedStateFromProps(nextProps: MarkerProps, prevState: State): Partial<State>;
@@ -33,6 +34,6 @@ export declare class Marker extends React.Component<MarkerProps, State> {
     private getProps;
     animatedMoveTo(coords: Point, duration: number): void;
     animatedRotateTo(angle: number, duration: number): void;
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export {};

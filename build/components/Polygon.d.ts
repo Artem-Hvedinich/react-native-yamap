@@ -9,10 +9,11 @@ export interface PolygonProps {
     points: Point[];
     innerRings?: (Point[])[];
     children?: undefined;
+    handled?: boolean;
 }
 export declare class Polygon extends React.Component<PolygonProps> {
     static defaultProps: {
         innerRings: never[];
     };
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }

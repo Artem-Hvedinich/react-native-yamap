@@ -9,8 +9,9 @@ export interface CircleProps {
     center: Point;
     radius: number;
     children?: undefined;
+    handled?: boolean;
 }
 export declare class Circle extends React.Component<CircleProps> {
     static defaultProps: {};
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
