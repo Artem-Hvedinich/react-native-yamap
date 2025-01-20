@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.view.View;
-import android.view.ViewParent;
 
 import androidx.annotation.NonNull;
 
@@ -29,7 +28,6 @@ import com.yandex.mapkit.directions.driving.DrivingRouter;
 import com.yandex.mapkit.directions.driving.DrivingSection;
 import com.yandex.mapkit.directions.driving.DrivingSession;
 import com.yandex.mapkit.directions.driving.VehicleOptions;
-import com.yandex.mapkit.directions.driving.DrivingRouterType;
 import com.yandex.mapkit.geometry.BoundingBox;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.geometry.Polyline;
@@ -51,10 +49,6 @@ import com.yandex.mapkit.map.PolylineMapObject;
 import com.yandex.mapkit.map.VisibleRegion;
 import com.yandex.mapkit.map.MapType;
 import com.yandex.mapkit.mapview.MapView;
-import com.yandex.mapkit.logo.Alignment;
-import com.yandex.mapkit.logo.Padding;
-import com.yandex.mapkit.logo.HorizontalAlignment;
-import com.yandex.mapkit.logo.VerticalAlignment;
 import com.yandex.mapkit.transport.TransportFactory;
 import com.yandex.mapkit.transport.masstransit.FilterVehicleTypes;
 import com.yandex.mapkit.transport.masstransit.MasstransitRouter;
@@ -101,10 +95,7 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
         put("trolleybus", "#55CfDC");
         put("walk", "#333333");
     }};
-
-    private ViewParent mViewParent;
     private String userLocationIcon = "";
-    private float userLocationIconScale = 1.f;
     private Bitmap userLocationBitmap = null;
     private RouteManager routeMng = new RouteManager();
     private MasstransitRouter masstransitRouter = TransportFactory.getInstance().createMasstransitRouter();
@@ -119,7 +110,7 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
     private float maxFps = 60;
     static private HashMap<String, ImageProvider> icons = new HashMap<>();
 
-    void setImage(final String iconSource, final PlacemarkMapObject mapObject, final IconStyle iconStyle) {
+    void setImage(String iconSource, PlacemarkMapObject mapObject, IconStyle iconStyle) {
         if (icons.get(iconSource)==null) {
             ImageLoader.DownloadImageBitmap(getContext(), iconSource, new Callback<Bitmap>() {
                 @Override
@@ -161,32 +152,6 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
         } else {
             getMap().move(position);
         }
-    }
-    public void setViewParent(@Nullable final ViewParent viewParent) { //any ViewGroup
-        mViewParent = viewParent;
-    }
-    @Override
-    public boolean onInterceptTouchEvent(final MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                if (null == mViewParent) {
-                    getParent().requestDisallowInterceptTouchEvent(true);
-                } else {
-                    mViewParent.requestDisallowInterceptTouchEvent(true);
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-                if (null == mViewParent) {
-                    getParent().requestDisallowInterceptTouchEvent(false);
-                } else {
-                    mViewParent.requestDisallowInterceptTouchEvent(false);
-                }
-                break;
-            default:
-                break;
-        }
-
-        return super.onInterceptTouchEvent(event);
     }
 
     private WritableMap positionToJSON(CameraPosition position, CameraUpdateReason reason, boolean finished) {
@@ -338,17 +303,16 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
             ArrayList<RequestPoint> _points = new ArrayList<>();
             for (int i = 0; i < points.size(); ++i) {
                 Point point = points.get(i);
-                RequestPoint _p = new RequestPoint(point, RequestPointType.WAYPOINT, null, null);
+                RequestPoint _p = new RequestPoint(point, RequestPointType.WAYPOINT, null);
                 _points.add(_p);
             }
-
-            drivingRouter.requestRoutes(_points, new DrivingOptions().setRoutesCount(1), new VehicleOptions(), listener);
+            drivingRouter.requestRoutes(_points, new DrivingOptions(), new VehicleOptions(), listener);
             return;
         }
         ArrayList<RequestPoint> _points = new ArrayList<>();
         for (int i = 0; i < points.size(); ++i) {
             Point point = points.get(i);
-            _points.add(new RequestPoint(point, RequestPointType.WAYPOINT, null, null));
+            _points.add(new RequestPoint(point, RequestPointType.WAYPOINT, null));
         }
         Session.RouteListener listener = new Session.RouteListener() {
             @Override
@@ -467,11 +431,6 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
         });
     }
 
-    public void setUserLocationIconScale(float scale) {
-        userLocationIconScale = scale;
-        updateUserLocationIcon();
-    }
-
     public void setUserLocationAccuracyFillColor(int color) {
         userLocationAccuracyFillColor = color;
         updateUserLocationIcon();
@@ -511,7 +470,7 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
         }
     }
 
-    public void setInitialRegion(@Nullable ReadableMap params) {
+    public void setInitialRegion (@Nullable ReadableMap params) {
         if ((!params.hasKey("lat") || params.isNull("lat")) || (!params.hasKey("lon") && params.isNull("lon")))
             return;
 
@@ -531,45 +490,6 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
         Point initialPosition = new Point(params.getDouble("lat"), params.getDouble("lon"));
         CameraPosition initialCameraPosition = new CameraPosition(initialPosition, initialRegionZoom, initialRegionAzimuth, initialRegionTilt);
         setCenter(initialCameraPosition, 0.f, 0);
-    }
-
-    public void setLogoPosition(@Nullable ReadableMap params) {
-        HorizontalAlignment horizontalAlignment = HorizontalAlignment.RIGHT;
-        VerticalAlignment verticalAlignment = VerticalAlignment.BOTTOM;
-
-        if (params.hasKey("horizontal") && !params.isNull("horizontal")) {
-            switch (params.getString("horizontal")) {
-                case "left":
-                    horizontalAlignment = HorizontalAlignment.LEFT;
-                    break;
-
-                case "center":
-                    horizontalAlignment = HorizontalAlignment.CENTER;
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        if (params.hasKey("vertical") && !params.isNull("vertical")) {
-            switch (params.getString("vertical")) {
-                case "top":
-                    verticalAlignment = VerticalAlignment.TOP;
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        getMap().getLogo().setAlignment(new Alignment(horizontalAlignment, verticalAlignment));
-    }
-
-    public void setLogoPadding(@Nullable ReadableMap params) {
-        int horizontalPadding = (params.hasKey("horizontal") && !params.isNull("horizontal")) ? params.getInt("horizontal") : 0;
-        int verticalPadding = (params.hasKey("vertical") && !params.isNull("vertical")) ? params.getInt("vertical") : 0;
-        getMap().getLogo().setPadding(new Padding(horizontalPadding, verticalPadding));
     }
 
     public void setMaxFps(float fps) {
@@ -635,21 +555,21 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
         }
     }
 
-    public void setFollowUser(Boolean follow) {
-        if (userLocationLayer == null) {
-        setShowUserPosition(true);
-        }
+     public void setFollowUser(Boolean follow) {
+          if (userLocationLayer == null) {
+            setShowUserPosition(true);
+          }
 
-        if(follow){
-        userLocationLayer.setAutoZoomEnabled(true);
-        userLocationLayer.setAnchor(
-            new PointF((float)(getWidth() * 0.5), (float)(getHeight() * 0.5)),
-            new PointF((float)(getWidth() * 0.5), (float)(getHeight() * 0.83)));
-        }else{
-        userLocationLayer.setAutoZoomEnabled(false);
-        userLocationLayer.resetAnchor();
-        }
-    }
+          if(follow){
+            userLocationLayer.setAutoZoomEnabled(true);
+            userLocationLayer.setAnchor(
+              new PointF((float)(getWidth() * 0.5), (float)(getHeight() * 0.5)),
+              new PointF((float)(getWidth() * 0.5), (float)(getHeight() * 0.83)));
+          }else{
+            userLocationLayer.setAutoZoomEnabled(false);
+            userLocationLayer.resetAnchor();
+          }
+     }
 
     private WritableMap convertRouteSection(Route route, final Section section, Polyline geometry, Weight routeWeight, int routeIndex) {
         SectionMetadata.SectionData data = section.getMetadata().getData();
@@ -843,14 +763,11 @@ public class YamapView extends MapView implements UserLocationObjectListener, Ca
 
     private void updateUserLocationIcon() {
         if (userLocationView != null) {
-            IconStyle userIconStyle = new IconStyle();
-            userIconStyle.setScale(userLocationIconScale);
-
             PlacemarkMapObject pin = userLocationView.getPin();
             PlacemarkMapObject arrow = userLocationView.getArrow();
             if (userLocationBitmap != null) {
-                pin.setIcon(ImageProvider.fromBitmap(userLocationBitmap), userIconStyle);
-                arrow.setIcon(ImageProvider.fromBitmap(userLocationBitmap), userIconStyle);
+                pin.setIcon(ImageProvider.fromBitmap(userLocationBitmap));
+                arrow.setIcon(ImageProvider.fromBitmap(userLocationBitmap));
             }
             CircleMapObject circle = userLocationView.getAccuracyCircle();
             if (userLocationAccuracyFillColor != 0) {
