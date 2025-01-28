@@ -22,6 +22,7 @@ RCT_EXPORT_MODULE()
         @"onCameraPositionChange",
         @"onMapPress",
         @"onMapLongPress",
+        @"onMapLoaded",
         @"onCameraPositionChangeEnd"
     ];
 }
@@ -52,6 +53,7 @@ RCT_EXPORT_VIEW_PROPERTY(onVisibleRegionReceived, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onCameraPositionChange, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onMapPress, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onMapLongPress, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onMapLoaded, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onCameraPositionChangeEnd, RCTBubblingEventBlock)
 
 RCT_CUSTOM_VIEW_PROPERTY(initialRegion, NSDictionary, RNYMView) {
