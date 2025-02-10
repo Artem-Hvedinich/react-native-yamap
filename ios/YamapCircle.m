@@ -65,12 +65,4 @@ RCT_CUSTOM_VIEW_PROPERTY(zIndex, NSNumber, YamapCircleView) {
     [view setZIndex: json];
 }
 
-RCT_CUSTOM_VIEW_PROPERTY(handled, NSNumber, YamapCircleView) {
-    if (json == nil || [json boolValue]) {
-        [view setHandled: YES];
-    } else {
-        [view setHandled: NO];
-    }
-}
-
 @end

@@ -17,7 +17,6 @@
 - (YMKCircle*)getCircle;
 - (YMKPolygonMapObject*)getMapObject;
 - (void)setMapObject:(YMKCircleMapObject*)mapObject;
-- (void)setHandled:(BOOL)_handled;
 
 @end
 

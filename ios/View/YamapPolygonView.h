@@ -18,7 +18,6 @@
 - (YMKPolygon*)getPolygon;
 - (YMKPolygonMapObject*)getMapObject;
 - (void)setMapObject:(YMKPolygonMapObject*)mapObject;
-- (void)setHandled:(BOOL)_handled;
 
 @end
 

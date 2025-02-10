@@ -23,7 +23,6 @@
     UIColor* strokeColor;
     NSNumber* strokeWidth;
     NSNumber* zIndex;
-    BOOL handled;
 }
 
 - (instancetype)init {
@@ -31,7 +30,6 @@
     fillColor = UIColor.blackColor;
     strokeColor = UIColor.blackColor;
     zIndex = [[NSNumber alloc] initWithInt:1];
-    handled = YES;
     strokeWidth = [[NSNumber alloc] initWithInt:1];
     _points = [[NSMutableArray alloc] init];
     innerRings = [[NSMutableArray alloc] init];
@@ -93,10 +91,6 @@
     [self updatePolygon];
 }
 
-- (void)setHandled:(BOOL)_handled {
-    handled = _handled;
-}
-
 - (void)setMapObject:(YMKPolygonMapObject *)_mapObject {
     mapObject = _mapObject;
     [mapObject addTapListenerWithTapListener:self];
@@ -107,7 +101,7 @@
     if (self.onPress)
         self.onPress(@{});
 
-    return handled;
+    return YES;
 }
 
 - (NSMutableArray<YMKPoint*>*)getPoints {
