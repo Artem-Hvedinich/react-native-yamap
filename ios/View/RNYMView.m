@@ -1,10 +1,6 @@
 #import <React/RCTComponent.h>
 #import <React/UIView+React.h>
 
-#if TARGET_OS_SIMULATOR
-#import <mach-o/arch.h>
-#endif
-
 #import <MapKit/MapKit.h>
 #import "../Converter/RCTConvert+Yamap.m"
 @import YandexMapsMobile;
@@ -49,14 +45,7 @@
 }
 
 - (instancetype)init {
-#if TARGET_OS_SIMULATOR
-    NXArchInfo *archInfo = NXGetLocalArchInfo();
-    NSString *cpuArch = [NSString stringWithUTF8String:archInfo->description];
-    self = [super initWithFrame:CGRectZero vulkanPreferred:[cpuArch hasPrefix:@"ARM64"]];
-#else
-    self = [super initWithFrame:CGRectZero];
-#endif
-
+    self = [super init];
     _reactSubviews = [[NSMutableArray alloc] init];
     masstransitRouter = [[YMKTransport sharedInstance] createMasstransitRouter];
     drivingRouter = [[YMKDirections sharedInstance] createDrivingRouter];
